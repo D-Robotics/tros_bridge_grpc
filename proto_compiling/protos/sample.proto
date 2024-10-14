@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "x3.proto";
+
+option java_package = "sample.grpc";
+
+package sample;
+option optimize_for = LITE_RUNTIME;
+
+service SampleService {
+    // rpc SampleMethod (SampleRequest) returns (SampleResponse) {}
+    rpc SampleMethod (x3.Capture) returns (x3.SmartFrameMessage) {}
+}
