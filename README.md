@@ -7,6 +7,8 @@
 
 ## 1. X5开发板
 
+根据开发板类型进行相应配置。
+
 **RDK X5**
 
 [参考手册](https://developer.d-robotics.cc/rdk_doc/Robot_development/quick_start/preparation)，RDK已烧录好Ubuntu系统镜像，已成功安装tros.b。
@@ -19,6 +21,12 @@
 
 [参考手册](http://sysgbj2.hobot.cc/x5/cn/linux_development/driver_develop_guide/33-WIFI_Driver_Debug_Guide.html#id5)，连接WIFI：`wifi_connect [ssid] [password]`，其中`ssid`为WIFI名称，`password`为WIFI密码。例如：`wifi_connect "WiFi-Test" "12345678"`。
 
+配置nginx参数：
+
+```bash
+sed -i 's/# user  nobody;/user  nobody/g' /opt/tros/humble/lib/websocket/webservice/conf/nginx.conf
+```
+
 ## 2. 部署gRPC server
 
 将部署包[下载](https://archive.d-robotics.cc/TogetheROS/files/tros_bridge_grpc.tar.gz)后拷贝到板端`/userdata/`路径下，解压缩：
@@ -28,42 +36,56 @@ cd /userdata/
 tar -zxvf tros_bridge_grpc.tar.gz -C /userdata/
 ```
 
-## 3. 部署算法
+## 3. 部署感知算法
 
 [参考手册](https://horizonrobotics.feishu.cn/docx/JEG8dob8ioB7R2xBWzYc0eyOn5d)，部署感知算法应用。
 
 # 三、运行
 
-## 终端1，启动感知和gRPC server
+## 终端1，启动感知算法
 
-**注意1**，以下命令要求安装路径（即`二、准备工作`章节的部署路径）如下：
+**注意**，以下命令以算法安装在`/userdata`路径下举例。
 
-1. `yoloworld`的安装路径为`/userdata/installyoloworld_advancev2/install`。
-2. `gRPC server`的安装路径为`/userdata/tros_bridge_grpc/install`。
+```bash
+# 依赖ros
+source /opt/ros/humble/setup.bash
+cd /userdata
+export ROS_LOG_DIR=./.ros/log
+export LD_LIBRARY_PATH=/opt/ros/humble/lib:/userdata/deps:/opt/tros/humble/lib:/usr/hobot/lib:sysroot_docker/usr_x5/lib:sysroot_docker/usr_x5/lib/aarch64-linux-gnu/
 
-**注意2**，如果`gRPC client`不是`X5`，使用`X5`的实际`IP`地址替换以下命令中的`localhost:2510`。
+# 依赖解压安装包
+source install/setup.bash
+
+# 复制模型文件
+cp -r install/lib/hobot_yolo_world/config .
+
+# 运行程序
+ros2 launch hobot_yolo_world yolo_world_advance.launch.py smart_topic:=/hobot_yolo_world
+```
+
+## 终端2，启动gRPC server
+
+**注意**，如果`gRPC client`不是`X5`，使用`X5`的实际`IP`地址替换以下命令中的`localhost:2510`。
 
 ```bash
 source /opt/tros/humble/setup.bash
-source /userdata/installyoloworld_advancev2/install/local_setup.bash
 source /userdata/tros_bridge_grpc/install/local_setup.bash
 
 cd /userdata
 export ROS_LOG_DIR=./.ros/log
 export LD_LIBRARY_PATH=/opt/ros/humble/lib:/userdata/deps:/opt/tros/humble/lib:/usr/hobot/lib:sysroot_docker/usr_x5/lib:sysroot_docker/usr_x5/lib/aarch64-linux-gnu/
 
-cp -r /userdata/installyoloworld_advancev2/install/lib/hobot_yolo_world/config/ .
-ros2 launch tros_bridge_grpc yolo_world.launch.py smart_topic:=/hobot_yolo_world is_sync_mode:=1 server_address:=localhost:2510 log_level:=warn
+ros2 run tros_bridge_grpc grpc_server --ros-args -p smart_topic:=/hobot_yolo_world -p is_sync_mode:=1 -p server_address:=localhost:2510 --log-level info
 ```
 
-## 终端2，启动gRPC client，发送图片
+## 终端3，启动gRPC client，发送图片
 
 ```bash
 source /opt/tros/humble/setup.bash
 source /userdata/tros_bridge_grpc/install/local_setup.bash
 
 cd /userdata
-export ROS_LOG_DIR=./.ros/log
+export ROS_LOG_DIR=/userdata/.ros/log
 export LD_LIBRARY_PATH=/opt/ros/humble/lib:/userdata/deps:/opt/tros/humble/lib:/usr/hobot/lib:sysroot_docker/usr_x5/lib:sysroot_docker/usr_x5/lib/aarch64-linux-gnu/
 
 ros2 run tros_bridge_grpc sample_client localhost:2510 `ros2 pkg prefix tros_bridge_grpc`/share/tros_bridge_grpc/config/yolo_world_test.jpg 1
@@ -75,8 +97,7 @@ ros2 run tros_bridge_grpc sample_client localhost:2510 `ros2 pkg prefix tros_bri
 
 ![](imgs/web.jpg)
 
-
-两个终端（左边是server，右边是client）输出如下log：
+3个终端（左上是感知算法输出，右上是gRPC server，左下是gRPC client）输出如下log：
 
 ![](imgs/terminal_log.jpg)
 
