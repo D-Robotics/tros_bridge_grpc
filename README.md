@@ -11,21 +11,21 @@
 
 **RDK X5**
 
-[参考手册](https://developer.d-robotics.cc/rdk_doc/Robot_development/quick_start/preparation)，RDK已烧录好Ubuntu系统镜像，已成功安装tros.b。
+- [参考手册](https://developer.d-robotics.cc/rdk_doc/Robot_development/quick_start/preparation)，RDK已烧录好Ubuntu系统镜像，已成功安装tros.b。
 
-[参考手册](https://developer.d-robotics.cc/rdk_doc/System_configuration/network_blueteeth#station%E6%A8%A1%E5%BC%8F)，连接WIFI。
+- [参考手册](https://developer.d-robotics.cc/rdk_doc/System_configuration/network_blueteeth#station%E6%A8%A1%E5%BC%8F)，连接WIFI。
 
 **X5 EVB**
 
-[参考手册](https://horizonrobotics.feishu.cn/docx/EgV8doolDo2kluxbo2BcJyoSnde)，安装`ROS2 humble`和`tros.b`。
+- [参考手册](https://horizonrobotics.feishu.cn/docx/EgV8doolDo2kluxbo2BcJyoSnde)，安装`ROS2 humble`和`tros.b`。
 
-[参考手册](http://sysgbj2.hobot.cc/x5/cn/linux_development/driver_develop_guide/33-WIFI_Driver_Debug_Guide.html#id5)，连接WIFI：`wifi_connect [ssid] [password]`，其中`ssid`为WIFI名称，`password`为WIFI密码。例如：`wifi_connect "WiFi-Test" "12345678"`。
+- [参考手册](http://sysgbj2.hobot.cc/x5/cn/linux_development/driver_develop_guide/33-WIFI_Driver_Debug_Guide.html#id5)，连接WIFI：`wifi_connect [ssid] [password]`，其中`ssid`为WIFI名称，`password`为WIFI密码。例如：`wifi_connect "WiFi-Test" "12345678"`。
 
-配置nginx参数：
+- 配置nginx参数：
 
-```bash
-sed -i 's/# user  nobody;/user  nobody/g' /opt/tros/humble/lib/websocket/webservice/conf/nginx.conf
-```
+  ```bash
+  sed -i 's/# user  nobody;/user  nobody/g' /opt/tros/humble/lib/websocket/webservice/conf/nginx.conf
+  ```
 
 ## 2. 部署gRPC server
 
