@@ -53,7 +53,7 @@ export ROS_LOG_DIR=./.ros/log
 export LD_LIBRARY_PATH=/opt/ros/humble/lib:/userdata/deps:/opt/tros/humble/lib:/usr/hobot/lib:sysroot_docker/usr_x5/lib:sysroot_docker/usr_x5/lib/aarch64-linux-gnu/
 
 cp -r /userdata/installyoloworld_advancev2/install/lib/hobot_yolo_world/config/ .
-ros2 launch tros_bridge_grpc yolo_world.launch.py smart_topic:=/hobot_yolo_world is_sync_mode:=1 server_address:=localhost:2510
+ros2 launch tros_bridge_grpc yolo_world.launch.py smart_topic:=/hobot_yolo_world is_sync_mode:=1 server_address:=localhost:2510 log_level:=warn
 ```
 
 ## 终端2，启动gRPC client，发送图片
