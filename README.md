@@ -27,7 +27,7 @@
   sed -i 's/# user  nobody;/user  nobody/g' /opt/tros/humble/lib/websocket/webservice/conf/nginx.conf
   ```
 
-## 2. 部署gRPC server
+## 2. 部署gRPC server & client
 
 将部署包[下载](https://archive.d-robotics.cc/TogetheROS/files/tros_bridge_grpc.tar.gz)后拷贝到板端`/userdata/`路径下，解压缩：
 
@@ -38,30 +38,13 @@ tar -zxvf tros_bridge_grpc.tar.gz -C /userdata/
 
 ## 3. 部署感知算法
 
-[参考手册](https://horizonrobotics.feishu.cn/docx/JEG8dob8ioB7R2xBWzYc0eyOn5d)，部署感知算法应用。
+[参考手册](https://horizonrobotics.feishu.cn/docx/JEG8dob8ioB7R2xBWzYc0eyOn5d#share-OmnkdaSEnoH0JgxuNSAcA1danLb)，部署感知算法应用。
 
 # 三、运行
 
 ## 终端1，启动感知算法
 
-**注意**，以下命令以算法安装在`/userdata`路径下举例。
-
-```bash
-# 依赖ros
-source /opt/ros/humble/setup.bash
-cd /userdata
-export ROS_LOG_DIR=./.ros/log
-export LD_LIBRARY_PATH=/opt/ros/humble/lib:/userdata/deps:/opt/tros/humble/lib:/usr/hobot/lib:sysroot_docker/usr_x5/lib:sysroot_docker/usr_x5/lib/aarch64-linux-gnu/
-
-# 依赖解压安装包
-source install/setup.bash
-
-# 复制模型文件
-cp -r install/lib/hobot_yolo_world/config .
-
-# 运行程序
-ros2 launch hobot_yolo_world yolo_world_advance.launch.py smart_topic:=/hobot_yolo_world
-```
+[参考手册](https://horizonrobotics.feishu.cn/docx/JEG8dob8ioB7R2xBWzYc0eyOn5d#share-K6I8dhGNUoN05KxODfccIUS5nib)，启动感知算法应用。
 
 ## 终端2，启动gRPC server
 
@@ -102,6 +85,8 @@ ros2 run tros_bridge_grpc sample_client localhost:2510 `ros2 pkg prefix tros_bri
 ![](imgs/terminal_log.jpg)
 
 # 五、RDK X5平台上编译gRPC server
+
+**注意**：本章节仅限于**RDK X5**平台使用。
 
 ## 1. 部署gRPC库及其依赖包
 
